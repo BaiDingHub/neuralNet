@@ -1,5 +1,6 @@
 # neuralNet
 numpy来写神经网络和CNN
+该神经网络使用cifar数据集
 
 
 # 该篇使用numpy来写神经网络模型，共完成了以下内容：
