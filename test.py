@@ -4,7 +4,7 @@
 # # 该文件对各个模块进行应用
 # 
 
-# In[1]:
+# In[ ]:
 
 
 import numpy as np 
@@ -12,12 +12,13 @@ from load_datas import *
 import matplotlib.pyplot as plt
 import neuralNet as net
 import netParts as parts
+import optim as op
 import Trainer 
 
 
 # ## 数据加载
 
-# In[2]:
+# In[ ]:
 
 
 X_train,Y_train,X_test,Y_test = load_data()     #加载数据
@@ -49,41 +50,48 @@ y = Y_train[:100]
 # In[ ]:
 
 
-# net.TwoLayerNet(x,y,100,10,1e-4,100)            #两层神经网络
+net.TwoLayerNet(x,y,100,10,1e-4,100)            #两层神经网络
 
 
 # ## 多层神经网络
 
-# In[8]:
+# In[ ]:
 
 
-model = net.FullyConnectedNets(3*32*32,[500,100],10,lr=1e-8,reg=0.6,
-                               loss_function=parts.softmax_loss,activation_function = 'relu',use_norm = True)   #多层神经网络
+model = net.FullyConnectedNets(3*32*32,[500,100],10,
+                               loss_function=op.svm_loss,activation_function = 'relu',
+                              config = {'lr':1e-5,'momentum':0.9,'decay_rate':0.99},grad_function = net.rmsprop)   #多层神经网络
 
 
-# In[9]:
+# In[ ]:
 
 
 x = X_train[:3000]
 y = Y_train[:3000]
 
 
-# In[11]:
+# In[ ]:
 
 
 #loss,grads = model.loss(x,y)
 
 
-# In[12]:
+# In[ ]:
+
+
+#print(loss)
+
+
+# In[ ]:
 
 
 processor = Trainer.ModelProcessor(model,x,y)               #训练器
 
 
-# In[13]:
+# In[ ]:
 
 
-loss_history,acc_history = processor.train(epoch=10,iterations=150,printFreq=15)
+loss_history,acc_history = processor.train(epoch=10,iterations=50,printFreq=20)
 
 
 # In[ ]:
@@ -117,7 +125,64 @@ plt.plot(acc_history)
 plt.show()
 
 
-# ## 其他
+# ## 卷积神经网络
+
+# In[ ]:
+
+
+conv_dims = [(3,3,5,2,2),(3,3,3,2,2)]
+pool_dims = [(3,3,1),(3,3,1)]
+fc_dims = [500,100]
+model = net.ConvNets((32,32,3),conv_dims,pool_dims,fc_dims,10, config = {'lr':1e-5,'momentum':0.9,'decay_rate':0.99},reg=0.6)
+
+
+# In[ ]:
+
+
+x = X_train[:3000]
+y = Y_train[:3000]
+
+
+# In[ ]:
+
+
+loss,grads = model.loss(x,y)
+
+
+# In[ ]:
+
+
+print(loss)
+
+
+# In[ ]:
+
+
+processor = Trainer.ModelProcessor(model,x,y)               #训练器
+
+
+# In[ ]:
+
+
+loss_history,acc_history = processor.train(epoch=2,iterations=1000,printFreq=1)
+
+
+# In[ ]:
+
+
+plt.plot(loss_history)
+plt.title('loss')
+plt.xlabel('itertions')
+plt.ylabel('loss')
+plt.show()
+
+
+# In[ ]:
+
+
+plt.plot(acc_history)
+plt.show()
+
 
 # In[ ]:
 

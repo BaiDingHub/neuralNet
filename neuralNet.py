@@ -9,6 +9,7 @@
 
 import numpy as np
 from netParts import *
+from optim import *
 
 
 # In[ ]:
