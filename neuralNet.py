@@ -187,17 +187,17 @@ class FullyConnectedNets(object):
         for i in range(self.depth):              #forward
             out,cache = affine_forward(x,self.params['W%d'%(i+1)],self.params['b%d'%(i+1)])
             if self.use_norm:
-                if Y is None:
+                if y is None:
                     self.bn_params[i]['mode'] = 'test'
                 out,cache = norm_forward(out,self.params['gamma%d'%(i+1)],self.params['beta%d'%(i+1)],self.bn_params[i])
             if self.use_dropout:
-                if Y is None:
+                if y is None:
                     self.dp_params['mode'] = 'test'
                 out,cache = dropout_forward(out,self.dp_params)
             out,cache = self.activation_forward(out)
             x = out
         score =np.argmax(x,axis=1)
-        if Y is None:
+        if y is None:
             return score,_
         acc = np.sum(score == y) / y.shape[0]
         return score,acc
@@ -447,7 +447,7 @@ class ConvNets(object):
             conv_param['pad'] = self.params['conv_pad%d'%(i+1)]
             out,cache = self.conv_forward(x,self.params['conv_W%d'%(i+1)],self.params['conv_b%d'%(i+1)],conv_param)
             if self.use_norm:
-                if Y is None:
+                if y is None:
                     self.conv_bn_params[i]['mode'] = 'test'
                 out,cache = spatial_batchnorm_forward(out,self.params['conv_gamma%d'%(i+1)],self.params['conv_beta%d'%(i+1)],self.conv_bn_params[i])
             #激活函数
@@ -466,17 +466,17 @@ class ConvNets(object):
         for i in range(self.fc_depth):              #forward
             out,cache = affine_forward(x,self.params['fc_W%d'%(i+1)],self.params['fc_b%d'%(i+1)])
             if self.use_norm:
-                if Y is None:
+                if y is None:
                     self.fc_bn_params[i]['mode'] = 'test'
                 out,cache = norm_forward(out,self.params['fc_gamma%d'%(i+1)],self.params['fc_beta%d'%(i+1)],self.fc_bn_params[i])
             if self.use_dropout:
-                if Y is None:
+                if y is None:
                     self.dp_params['mode'] = 'test'
                 out,cache = dropout_forward(out,self.dp_params)
             out,cache = self.activation_forward(out)
             x = out
         score =np.argmax(x,axis=1)
-        if Y is None:
+        if y is None:
             return score,_
         acc = np.sum(score == y) / y.shape[0]
         return score,acc
