@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# In[ ]:
+
+
 import numpy as np
 import math
+
 
 # ## Ｌoss函数
 
@@ -362,4 +366,72 @@ def dropout_backward(dout,cache):
     mask = cache
     dx = dout * mask
     return dx
+
+
+# ## 评价方法
+
+# In[ ]:
+
+
+def information(predicts,y):
+    '''
+    获得预测值的真正TP，假反FN，假正FP，真反FN
+    '''
+    TP = 0
+    FP = 0
+    TN = 0
+    FN = 0
+    for i in range(len(predicts)):
+        if(predicts[i] == 1):
+            if(y[i] == 1):
+                TP += 1
+            else:
+                FP += 1
+        else:
+            if(y[i] == 1):
+                FN += 1
+            else:
+                TN += 1
+    return TP,FP,TN,FN
+
+
+# In[ ]:
+
+
+#准确率
+def getAccuracy(predicts,y):
+    return(predicts == y).sum()/len(y)
+
+
+# In[ ]:
+
+
+#精确率,查准率
+def getPrecision(predicts,y):
+    TP,FP,TN,FN = information(predicts,y)
+    precision = TP/(TP + FP)
+    return precision
+
+
+# In[ ]:
+
+
+#召回率，查全率
+def getRecall(predicts,y):
+    TP,FP,TN,FN = information(predicts,y)
+    recall = TP/(TP + FN)
+    return recall
+
+
+# In[ ]:
+
+
+def getF1Score(predicts,y):
+    '''
+    得到F1Score
+    '''
+    predicision = getPrecision(predicts,y)
+    recall = getRecall(predicts,y)
+    F1Score =2 * predicision * recall/(predicision + recall)
+    return F1Score
 
