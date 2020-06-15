@@ -1,6 +1,10 @@
 # neuralNet
 numpy来写神经网络和CNN
-该神经网络使用cifar数据集
+该神经网络使用cifar数据集和MNIST数据集
+
+**注意**：
+
+在运行前，请先下载CIFAR或者MNIST数据集，将其解压后放置在对应的文件夹下面。
 
 
 # 该篇使用numpy来写神经网络模型，共完成了以下内容：
@@ -25,11 +29,11 @@ numpy来写神经网络和CNN
       5）spatial_batchnorm （ 空间标准化，用于CNN
       
       6）各种梯度下降方法
-    
+
 ## 3.CNN模型
      conov层
      max_pool层
-     
+
 ## 其他文件
    1） Train.py
         用于对模型进行整体的训练
